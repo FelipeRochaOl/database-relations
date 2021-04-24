@@ -13,10 +13,27 @@ interface IRequest {
 
 @injectable()
 class CreateProductService {
-  constructor(private productsRepository: IProductsRepository) {}
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
 
   public async execute({ name, price, quantity }: IRequest): Promise<Product> {
-    // TODO
+    let product = await this.productsRepository.findByName(name);
+
+    if (!product) {
+      product = await this.productsRepository.create({
+        name,
+        price,
+        quantity,
+      });
+
+      return product;
+    }
+
+    throw new AppError(
+      'Não é possível o cadastro de produtos com nomes iguais',
+    );
   }
 }
 
