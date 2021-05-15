@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile
+    restart: always
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - DEBUG=true
+      - PG_TRUST_LOCALNET=true
+      - DB_EXTENSION=uuid-ossp
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_MULTIPLE_DATABASES=gostack_desafio09,gostack_desafio09_tests
+
+    volumes:
+      - ~/app/gobarber/src/database:/var/lib/postgresql
